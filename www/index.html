@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Untitled Document</title>
+        <link href="jquery-mobile/jquery.mobile-1.0.min.css" rel="stylesheet" type="text/css">
+        <script src="jquery-mobile/jquery-1.6.4.min.js" type="text/javascript"></script>
+        <script src="jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+        <script src="angularjs/angular.js" type="text/javascript"></script>
+
+        <!-- google charts-->
+        <script type="text/javascript" src="google-charts/google-chart-loader.js" ></script>
+        <script src="google-charts/chart.js" type="text/javascript"></script>
+
+
+    </head>
+
+    <body ng-app="myApp" ng-controller="cntrl">
+        <div data-role="page" class="jqm-demos" id="panel-fixed-page1" data-title="Panel fixed positioning" data-url="panel-fixed-page1">
+            <div data-role="header" data-position="fixed">
+                <h1>Feeds & charts</h1>
+                <a href="#nav-panel" data-icon="bars" data-iconpos="notext">Menu</a>
+                <a href="#" data-icon="gear" data-iconpos="notext">Add</a>
+            </div><!-- /header -->
+
+            <div role="main" class="ui-content jqm-content jqm-fullwidth">
+                <h1>Welcome home!</h1>
+                <p>This app help to catch social feeds and work altogether. Lets start with different social feeds :-)</p>     
+            </div><!-- /content -->      
+
+            <div  data-role="content">
+                <ul data-role="listview" data-split-icon="arrow-d">
+                    <li><a href="#">Feeds<span class="ui-li-count">{{len}}</span></a><a href="#"></a></li>          
+                </ul>
+                <hr> <!-- section title -->                    
+
+
+                <div ng-repeat="x in data.items">  <!--dynamically generates news feeds-->
+                    <div data-role="collapsible-set">
+                        <div data-role="collapsible" data-collapsed="false">
+                            <h3>{{x.title}}</h3>
+                            <a href="{{ x.link}}" target="_blank">{{ x.link}}</a>				
+                            <p>Content: {{ x.content}}</p>
+                            <span>Publication Date: {{ x.pubDate }}</span>									
+                        </div> 
+                    </div>
+                    <hr>  
+                </div>
+
+            </div>  
+
+            <script>
+                var app = angular.module('myApp', []);
+                    app.controller('cntrl', function($scope, $http) {
+                        $http.get("http://rss2json.com/api.json?rss_url=http%3A%2F%2Fwww.rigzone.com%2Fnews%2Frss%2Frigzone_latest.aspx") // Rig zone rrss feed, used an api to convert the rss file to json
+                             .success(function (response) {$scope.data = response; $scope.len=Object.keys(response.items).length })
+                            });     
+            </script>
+
+            <ul data-role="listview" data-split-icon="arrow-d">    
+                <li><a href="#">Charts</a><a href="#"></a></li>
+            </ul>
+
+            <!-- map div adds here-->
+            <div role="main" id="showMap" class="ui-content jqm-content jqm-fullwidth">
+                <!--Div that will hold the pie chart -->
+                <div id="chart_div"></div>
+            </div>
+        </div>
+
+    </body>
+</html>
